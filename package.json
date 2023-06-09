@@ -1,0 +1,44 @@
+{
+  "name": "draganddrop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "installWebpack": "yarn add webpack webpack-cli html-webpack-plugin html-loader mini-css-extract-plugin css-loader babel-loader --dev",
+    "installDevserver": "yarn add webpack-dev-server --dev",
+    "installJest": "yarn add jest @babel/core @babel/cli @babel/preset-env --dev",
+    "installCoreJs": "yarn add core-js@3",
+    "instalEsLint": "yarn add eslint eslint-config-airbnb-base --dev",
+    "installEslintYarn": "yarn add eslint eslint-plugin-import eslint-config-airbnb-base --dev",
+    "installPuppeteer": "yarn add puppeteer@19.4.0 --dev",
+    "start": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "lint": "eslint .",
+    "test": "jest",
+    "e2e": "jest --testPathPattern=./e2e/ --runInBand",
+    "coverage": "jest --coverage",
+    "preshow:coverage": "npm run coverage",
+    "show:coverage": "live-server coverage/lcov-report",
+    "preshow:dist": "npm run build",
+    "show:dist": "live-server dist"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.22.1",
+    "@babel/preset-env": "^7.22.4",
+    "babel-loader": "^9.1.2",
+    "css-loader": "^6.8.1",
+    "eslint": "^8.42.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "html-loader": "^4.2.0",
+    "html-webpack-plugin": "^5.5.1",
+    "mini-css-extract-plugin": "^2.7.6",
+    "webpack": "^5.86.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.0"
+  },
+  "dependencies": {
+    "core-js": "3"
+  }
+}

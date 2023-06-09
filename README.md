@@ -1,0 +1,1 @@
+![CI](https://github.com/DmitriyIskra/game-goblin-yarn/actions/workflows/web.yml/badge.svg)
