@@ -1,18 +1,18 @@
 export default class ControlAddForm {
-    constructor(form) {
-        this.form = form;
-        this.textArea = this.form.querySelector('.add-textarea');
-    }
+  constructor(form) {
+    this.form = form;
+    this.textArea = this.form.querySelector('.add-textarea');
+  }
 
-    showForm() {
-        this.form.classList.add('active');
-    }
+  showForm() {
+    this.form.classList.add('active');
+  }
 
-    hideForm(e) {
-        e.preventDefault();
+  hideForm(e) {
+    e.preventDefault();
 
-        this.form.classList.remove('active');
+    this.form.classList.remove('active');
 
-        this.textArea.value = '';
-    }
+    this.textArea.value = '';
+  }
 }
