@@ -1,9 +1,8 @@
 export default class controlWidget {
-  constructor(widget, saveState, ControlAddForm, cursor) {
+  constructor(widget, saveState, ControlAddForm) {
     this.widget = widget;
     this.controlForm = ControlAddForm;
     this.saveState = saveState;
-    this.cursor = cursor;
 
     this.textArea = this.widget.querySelector('.add-textarea');
     this.columns = null;
@@ -16,12 +15,12 @@ export default class controlWidget {
     this.subElement = null;
     this.lastSubElement = null;
     // центр подэлемента над которым нависает перетаскиваемый элемент
-    this.subElementCenter = null; 
+    this.subElementCenter = null;
 
     this.onClick = this.onClick.bind(this);
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
-    this.onMouseOver = this.onMouseOver.bind(this)
+    this.onMouseOver = this.onMouseOver.bind(this);
   }
 
   init() {
@@ -86,151 +85,137 @@ export default class controlWidget {
   onMouseOver(e) {
     // получаем координаты для позиционирования карточки
     // для того чтобы курсор оставался где схватили
-    let x = e.clientX - this.widget.offsetLeft - this.takeIndentX;
-    let y = e.clientY - this.widget.offsetTop - this.takeIndentY;
-    
+    const x = e.clientX - this.widget.offsetLeft - this.takeIndentX;
+    const y = e.clientY - this.widget.offsetTop - this.takeIndentY;
+
     // присвоение координат
     this.activeCard.style.top = `${y}px`;
     this.activeCard.style.left = `${x}px`;
 
     // добавление отступа для карточки
-    if(e.target.closest('.card')) {
-        // определяем подэлемент
-        this.subElement = e.target.closest('.card');
-        this.subElement.style.cursor = 'grabbing';
-        // вносим в крайний активный подэлемент если пусо
-        if(!this.lastSubElement) this.lastSubElement = this.subElement;
+    if (e.target.closest('.card')) {
+      // определяем подэлемент
+      this.subElement = e.target.closest('.card');
+      this.subElement.style.cursor = 'grabbing';
+      // вносим в крайний активный подэлемент если пусо
+      if (!this.lastSubElement) this.lastSubElement = this.subElement;
 
-        // если подэлемент меняется, то у прошлого margin убираем
-        if(this.lastSubElement && this.subElement !== this.lastSubElement) {
-            this.lastSubElement.style.marginBottom = '';
-            this.lastSubElement.style.marginTop = '';
+      // если подэлемент меняется, то у прошлого margin убираем
+      if (this.lastSubElement && this.subElement !== this.lastSubElement) {
+        this.lastSubElement.style.marginBottom = '';
+        this.lastSubElement.style.marginTop = '';
 
-            this.lastSubElement.style.cursor = 'pointer';
-        }
+        this.lastSubElement.style.cursor = 'pointer';
+      }
 
-        // определяем центр подэлемента
-        this.subElementCenter = this.subElement.offsetHeight / 2;
-        
-        // определяем выше или ниже центра находится курсор
-        if(e.offsetY > this.subElementCenter) {
-            if(this.subElement.style.marginTop) this.subElement.style.marginTop = ``;
-            this.subElement.style.marginBottom = `${this.activeCard.offsetHeight}px`;
+      // определяем центр подэлемента
+      this.subElementCenter = this.subElement.offsetHeight / 2;
 
-            this.lastSubElement = this.subElement;
-        } else {
-            this.subElement.style.marginTop = `${this.activeCard.offsetHeight}px`;
-            if(this.subElement.style.marginBottom) this.subElement.style.marginBottom = ``;
+      // определяем выше или ниже центра находится курсор
+      if (e.offsetY > this.subElementCenter) {
+        if (this.subElement.style.marginTop) this.subElement.style.marginTop = '';
+        this.subElement.style.marginBottom = `${this.activeCard.offsetHeight}px`;
 
-            this.lastSubElement = this.subElement;
-        }
-        
+        this.lastSubElement = this.subElement;
+      } else {
+        this.subElement.style.marginTop = `${this.activeCard.offsetHeight}px`;
+        if (this.subElement.style.marginBottom) this.subElement.style.marginBottom = '';
+
+        this.lastSubElement = this.subElement;
+      }
     }
   }
 
   onMouseDown(e) {
-    
+    if (e.target.closest('.card') && !e.target.matches('.delete-card')) {
+      e.preventDefault();
 
-    if(e.target.closest('.card') && !e.target.matches('.delete-card')) {
-        e.preventDefault();
+      this.activeCard = e.target.closest('.card');
 
-        this.activeCard = e.target.closest('.card');
-    
-        const widthEl = this.activeCard.offsetWidth;
-        
-        // Меняем курсор
-        this.widget.style.cursor = 'grabbing';
+      const widthEl = this.activeCard.offsetWidth;
 
-        // отступ положения курсора от края элемента
-        this.takeIndentX = e.offsetX;
-        this.takeIndentY = e.offsetY;
+      // Меняем курсор
+      this.widget.style.cursor = 'grabbing';
 
-        this.activeCard.style.width = `${widthEl}px`;
-        this.activeCard.classList.add('move-card');
+      // отступ положения курсора от края элемента
+      this.takeIndentX = e.offsetX;
+      this.takeIndentY = e.offsetY;
 
-        // получаем координаты для позиционирования карточки
-        // для того чтобы курсор оставался где схватили
-        let x = e.clientX - this.widget.offsetLeft - this.takeIndentX;
-        let y = e.clientY - this.widget.offsetTop - this.takeIndentY;
-        
-        // присвоение координат
-        this.activeCard.style.top = `${y}px`;
-        this.activeCard.style.left = `${x}px`;
+      this.activeCard.style.width = `${widthEl}px`;
+      this.activeCard.classList.add('move-card');
 
-        this.widget.removeEventListener('mousedown', this.onMouseDown);
-        this.widget.addEventListener('mousemove', this.onMouseOver);
-        document.addEventListener('mouseup', this.onMouseUp);
+      // получаем координаты для позиционирования карточки
+      // для того чтобы курсор оставался где схватили
+      const x = e.clientX - this.widget.offsetLeft - this.takeIndentX;
+      const y = e.clientY - this.widget.offsetTop - this.takeIndentY;
+
+      // присвоение координат
+      this.activeCard.style.top = `${y}px`;
+      this.activeCard.style.left = `${x}px`;
+
+      this.widget.removeEventListener('mousedown', this.onMouseDown);
+      this.widget.addEventListener('mousemove', this.onMouseOver);
+      document.addEventListener('mouseup', this.onMouseUp);
     }
-    
-    
   }
 
   onMouseUp(e) {
-
     let activeColumn;
     let activeCards;
 
-    
-    if(this.activeCard && e.target.closest('.column')) {
+    if (this.activeCard && e.target.closest('.column')) {
       // в случае если колонка пустая, добавляем по блоку cards
-        activeColumn = e.target.closest('.column');
-        activeCards = activeColumn.querySelector('.cards');
+      activeColumn = e.target.closest('.column');
+      activeCards = activeColumn.querySelector('.cards');
     }
 
     // в случае если движения мыши не было и элементы пустые
-    if(!this.subElement || !this.lastSubElement) {
-        this.subElement = e.target.closest('.card');
-        this.lastSubElement = this.subElement;
+    if (!this.subElement || !this.lastSubElement) {
+      this.subElement = e.target.closest('.card');
+      this.lastSubElement = this.subElement;
     }
 
     // ращитываем отступ центра подэлемента от верха экрана
-    let coordsSubElement
-    if(this.lastSubElement) {      
+    let coordsSubElement;
+    if (this.lastSubElement) {
       // отступ центра элемента от верха, по факту меняется
       coordsSubElement = this.lastSubElement.offsetHeight / 2 + this.lastSubElement.offsetTop + this.widget.offsetTop;
     }
-   
+
     // размещение элемента относительно подэлемента
-    if(this.activeCard && e.clientY > coordsSubElement && this.subElementCenter && activeCards.children.length > 0) {
-      // ниже 
+    if (this.activeCard && e.clientY > coordsSubElement && this.subElementCenter && activeCards.children.length > 0) {
+      // ниже
       this.lastSubElement.after(this.activeCard);
       this.saveState.save(this.widget);
-    } else if(this.activeCard && e.clientY < coordsSubElement && this.subElementCenter && activeCards.children.length > 0) {
+    } else if (this.activeCard && e.clientY < coordsSubElement && this.subElementCenter && activeCards.children.length > 0) {
       // выше
       this.lastSubElement.before(this.activeCard);
       this.saveState.save(this.widget);
-    } else if(this.activeCard && activeCards && activeCards.children.length === 0) {
+    } else if (this.activeCard && activeCards && activeCards.children.length === 0) {
       // если нет в блоке карточек
       activeCards.append(this.activeCard);
       this.saveState.save(this.widget);
-    } else if(this.activeCard && activeCards && !this.subElementCenter) {
+    } else if (this.activeCard && activeCards && !this.subElementCenter) {
       activeCards.append(this.activeCard);
     }
 
-    
+    if (this.activeCard) {
+      this.widget.style.cursor = 'default';
+      if (this.subElement) this.subElement.style.cursor = 'pointer'; // ERROR...
 
-    if(this.activeCard) {
-        this.widget.style.cursor = 'default';
-        if(this.subElement) this.subElement.style.cursor = 'pointer'; // ERROR...
-        
-        this.activeCard.style.width = ``;
-        this.activeCard.classList.remove('move-card');
-        this.activeCard.style.top = ``;
-        this.activeCard.style.left = ``;
+      this.activeCard.style.width = '';
+      this.activeCard.classList.remove('move-card');
+      this.activeCard.style.top = '';
+      this.activeCard.style.left = '';
 
-        // убираем margin при отпускании кнопки
-        if(this.subElement && this.subElement.style.marginTop) this.subElement.style.marginTop = ``;
-        if(this.subElement && this.subElement.style.marginBottom) this.subElement.style.marginBottom = ``;
+      // убираем margin при отпускании кнопки
+      if (this.subElement && this.subElement.style.marginTop) this.subElement.style.marginTop = '';
+      if (this.subElement && this.subElement.style.marginBottom) this.subElement.style.marginBottom = '';
 
-        
-
-        this.activeCard = null;
-        this.lastSubElement = null;
-        this.subElement = null;
-            
+      this.activeCard = null;
+      this.lastSubElement = null;
+      this.subElement = null;
     }
-
-    
 
     this.widget.addEventListener('mousedown', this.onMouseDown);
     this.widget.removeEventListener('mousemove', this.onMouseOver);
