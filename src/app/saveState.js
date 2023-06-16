@@ -150,7 +150,7 @@ export default class SaveState {
 
   // Загрузка приложения первый раз и последующие
   load(widget) {
-    if (localStorage.length > 0) {
+    if (localStorage?.saveWidget) {
       const storage = JSON.parse(localStorage.saveWidget);
 
       storage.forEach((el) => {
@@ -158,7 +158,7 @@ export default class SaveState {
 
         widget.append(column);
       });
-
+ 
       return;
     }
 

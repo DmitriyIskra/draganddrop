@@ -9,7 +9,7 @@ export default class ControlAddForm {
   }
 
   hideForm(e) {
-    e.preventDefault();
+    e.preventDefault(); 
 
     this.form.classList.remove('active');
 
